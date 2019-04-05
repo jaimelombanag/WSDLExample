@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SOAP_WebServiceSample</string>
+
+    <string name="str_networktitlemessage">Network Issue</string>
+    <string name="str_networkmessage">Check your internet connection.</string>
+
+    <string name="success">Success</string>
+    <string name="error">Error</string>
+</resources>
