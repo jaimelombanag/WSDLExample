@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="namespace2">http://tempuri.org/</string>
+    <string name="namespace1">http://tempuri.org/</string>
     <string name="namespace">http://ws.fastcar.rwtec.com/</string>
+    <string name="soap_action"></string>
 
 
 
-    <string name="getCountry2">GetCountry</string>
+    <string name="getCountry1">GetCountry</string>
     <string name="getCountry">cargarZonasPlacas</string>
 
 

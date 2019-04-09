@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -30,19 +32,36 @@ class Webservice {
 
             SoapObject request = new SoapObject(context.getResources()
                     .getString(R.string.namespace), context.getResources()
-                    .getString(R.string.getCountry))
-                    .addProperty("json", "{\"tipoProyecto\":\"7\"}");
+                    .getString(R.string.getCountry));
 
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
+
+
+
+            DatosOperativoDTO datosOperativoDTO = new DatosOperativoDTO();
+            datosOperativoDTO.setTipoProyecto("7");
+            Gson gson = new Gson();
+            String json = gson.toJson(datosOperativoDTO);
+
+
+            Log.i("JAIME",  " Los parametros: " + json);
+
+            request.addProperty("json", json);
+
+
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+
+
             envelope.setOutputSoapObject(request);
             envelope.dotNet = true;
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(
-                    Constant.Webservice_url);
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(Constant.Webservice_url);
+
+
             androidHttpTransport.call(
-                    context.getResources().getString(R.string.namespace)
-                            + context.getResources().getString(
-                            R.string.getCountry), envelope);
+                    context.getResources().getString(R.string.soap_action)
+                           , envelope);
+
+
 
             String result = envelope.getResponse().toString();
 

@@ -11,8 +11,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +29,14 @@ public class MainActivity extends AppCompatActivity {
     List<SpinnerHelper> arrayCountryspinner;
 
     String Checkcommonspinner=Constant.COUNTRY, returnCountry="Error", countryId, countryName;
+
+
+
+    String SOAP_ACTION = "";
+    String METHOD_NAME = "cargarZonasPlacas";
+    String NAMESPACE = "http://ws.fastcar.rwtec.com/";
+    String URL = "http://ec2-18-223-82-5.us-east-2.compute.amazonaws.com:8180/SistemaAsignacionServicios/WSFuncionesSistemaAsignacion/WSFuncionesSistemaAsignacion";
+    SoapPrimitive resultString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +48,61 @@ public class MainActivity extends AppCompatActivity {
         /*getLocationFunction*/
         getLocation();
 
+
+
+
+
+        //WebService tarea = new WebService();
+        //tarea.execute();
+
     }
+
+
+
+    private class WebService extends AsyncTask<Void, Void, Void>{
+
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ConsubeWeb();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            Log.i("JAIME", "------La respuesta:  "  +  resultString.toString());
+        }
+
+
+    }
+
+
+    private void ConsubeWeb(){
+        try{
+            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
+            Request.addProperty("json", "{\"tipoProyecto\":\"7\"}");
+            SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+            soapEnvelope.dotNet = true;
+            soapEnvelope.setOutputSoapObject(Request);
+            HttpTransportSE transport = new HttpTransportSE(URL);
+            transport.call("", soapEnvelope);
+            resultString = (SoapPrimitive) soapEnvelope.getResponse();
+
+            Log.i("JAIME",  "-----------    "   + (SoapPrimitive) soapEnvelope.getResponse());
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     /*this_check_internet_connection&call_async_*/
     private void getLocation() {
@@ -70,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 Webservice webservice = new Webservice(context);
 
                 if(Checkcommonspinner.equalsIgnoreCase(Constant.COUNTRY)) {
+                    Log.i("JAIME", "-------Entra aca-----------");
                     returnCountry = webservice.getCountry();
                 }
                 Log.e("Data", returnCountry);

@@ -12,8 +12,8 @@ import android.support.v7.app.AlertDialog;
 
 public class Constant {
 
-    public static final String Webservice_url2 = "http://www.i2isoftwares.com/SSKSService/sskservices.asmx";
-    public static final String Webservice_url = "http://ec2-18-223-82-5.us-east-2.compute.amazonaws.com:8180/SistemaAsignacionServicios/WSFuncionesSistemaAsignacion/WSFuncionesSistemaAsignacion";
+    public static final String Webservice_url1 = "http://www.i2isoftwares.com/SSKSService/sskservices.asmx";
+    public static final String Webservice_url= "http://ec2-18-223-82-5.us-east-2.compute.amazonaws.com:8180/SistemaAsignacionServicios/WSFuncionesSistemaAsignacion/WSFuncionesSistemaAsignacion";
 
     public static final String COUNTRY="Country";
     public static final String TAG_COUNTRYNAME= "CountryName";
