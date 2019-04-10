@@ -17,9 +17,17 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     String NAMESPACE = "http://ws.fastcar.rwtec.com/";
     String URL = "http://ec2-18-223-82-5.us-east-2.compute.amazonaws.com:8180/SistemaAsignacionServicios/WSFuncionesSistemaAsignacion/WSFuncionesSistemaAsignacion";
     SoapPrimitive resultString;
+    public static final MediaType SOAP_MEDIA_TYPE = MediaType.parse("application/xml");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +55,54 @@ public class MainActivity extends AppCompatActivity {
         spinCtry = (Spinner) findViewById(R.id.idSpinner);
 
         /*getLocationFunction*/
-        getLocation();
+        //getLocation();
+
+
+        String soap_string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns1=\"http://ws.fastcar.rwtec.com/\">\n" +
+                "  <SOAP-ENV:Body>\n" +
+                "    <ns1:cargarZonasPlacas>\n" +
+                "      <json>{\"tipoProyecto\":\"7\"}</json>\n" +
+                "    </ns1:cargarZonasPlacas>\n" +
+                "  </SOAP-ENV:Body>\n" +
+                "</SOAP-ENV:Envelope>";
 
 
 
+        final OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(SOAP_MEDIA_TYPE, soap_string);
+
+        final Request request = new Request.Builder()
+                .url("http://ec2-18-223-82-5.us-east-2.compute.amazonaws.com:8180/SistemaAsignacionServicios/WSFuncionesSistemaAsignacion/WSFuncionesSistemaAsignacion?wsdl")
+                .post(body)
+                .addHeader("Content-Type", "application/xml")
+                .addHeader("Authorization", "Your Token")
+                .addHeader("cache-control", "no-cache")
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String mMessage = e.getMessage().toString();
+                Log.w("failure Response", mMessage);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String mMessage = response.body().string();
+                String[] mMessage2 = mMessage.split("return>");
+
+
+                Log.i("JAIME", "------------    "  + mMessage);
+                Log.i("JAIME", "------------    "  + mMessage2.length);
+
+                Log.i("JAIME", "------------    "  + mMessage2[0]);
+                Log.i("JAIME", "------------    "  + mMessage2[1]);
+                Log.i("JAIME", "------------    "  + mMessage2[2]);
+            }
+        });
 
 
         //WebService tarea = new WebService();
